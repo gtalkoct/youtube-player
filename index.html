@@ -2,46 +2,20 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>YouTube Player</title>
+<title>カウンター</title>
 </head>
 <body>
 
-<div id="player"></div>
+<h1>カウンター</h1>
+<button onclick="count()">押す</button>
+<p id="out">0</p>
 
-<script src="https://www.youtube.com/iframe_api"></script>
 <script>
-let player;
-let lastIndex = -1;
+let n = 0;
 
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('player', {
-    height: '360',
-    width: '640',
-    playerVars: {
-      playlist: 'fVWaduDxqeI,tJ8VmKwwmWo,Hw86LEc7Se4',
-      controls: 1,
-      modestbranding: 1
-    },
-    events: {
-      'onStateChange': onPlayerStateChange
-    }
-  });
-}
-
-function onPlayerStateChange(event) {
-  if (event.data === YT.PlayerState.PLAYING) {
-
-    let index = player.getPlaylistIndex();
-
-    if (index !== lastIndex) {
-      lastIndex = index;
-
-      let title = player.getVideoData().title;
-      let duration = player.getDuration();
-
-      console.log("切り替え:", title, duration);
-    }
-  }
+function count(){
+  n++;
+  document.getElementById("out").textContent = n;
 }
 </script>
 
