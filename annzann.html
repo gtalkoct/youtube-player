@@ -7,7 +7,7 @@
 <p> </p>
 <div id="box1" class="rotation-area"></div>
 <center>
-<p id="kaisu" style="color: royalblue;">Count.0</p>
+<p id="kaisu" style="color: royalblue; font-size: 130%;">Count.0</p>
 <div id="boxi_Q" class="boxc_2"></div>
 <div id="boxi_Q2" class="boxc_3"></div>
 </center>
@@ -107,6 +107,8 @@ td {
     text-align: center;
     box-sizing: border-box;
 }
+
+.fx2 {font-size:150%;}
 
 .choices{
  display:grid;
@@ -283,7 +285,7 @@ function fun_2(data) {
         }
     }
     DM='<div class="choices">'+DM+'</div>';
-    elm_Q.innerHTML+='<div id="Q'+NQ+'" data-q="x">'+String(N1)+' × '+String(N2)+' ＝ <a id="A'+NQ+'" class="swY2">　？　</a><br>'+DM+'<br><a id="M'+NQ+'" > </a></div><br>';
+    elm_Q.innerHTML+='<div id="Q'+NQ+'"class="fx2" data-q="x">'+String(N1)+' × '+String(N2)+' ＝ <a id="A'+NQ+'" class="swY2">　？　</a><br>'+DM+'<br><a id="M'+NQ+'" > </a></div><br>';
 }
 
 //不正解のとき
@@ -393,7 +395,7 @@ function fun_6(data) {
     }
     L1[NQ]='<div class="choices">'+DM2+'</div>';;
     
-    elm_Q.innerHTML+='<div id="Q'+NQ+'" data-q="÷">'+String(N1)+' ÷ '+String(N2)+' ＝ <a id="A'+NQ+'" class="swY2">　？　</a> 余り <a id="A'+NQ+'" class="swY2">　？　</a><div id="sho">　商：<br>'+DM+'</div><div id="C'+NQ+'" > </div><br><div id="M'+NQ+'" > </div></div><br>';
+    elm_Q.innerHTML+='<div id="Q'+NQ+'"class="fx2" data-q="÷">'+String(N1)+' ÷ '+String(N2)+' ＝ <a id="A'+NQ+'" class="swY2">　？　</a> 余り <a id="A'+NQ+'" class="swY2">　？　</a><div id="sho">　商：<br>'+DM+'</div><div id="C'+NQ+'" > </div><br><div id="M'+NQ+'" > </div></div><br>';
 }
 
 //作問　足し算引き算
@@ -453,7 +455,7 @@ function fun_7(data) {
         }
     }
     DM='<div class="choices">'+DM+'</div>';
-    elm_Q.innerHTML+='<div id="Q'+NQ+'" data-q="x">'+String(N1)+' '+kigo+' '+String(N2)+' ＝ <a id="A'+NQ+'" class="swY2">　？　</a><br>'+DM+'<br><div id="M'+NQ+'" > </div></div><br>';
+    elm_Q.innerHTML+='<div id="Q'+NQ+'"class="fx2" data-q="x">'+String(N1)+' '+kigo+' '+String(N2)+' ＝ <a id="A'+NQ+'" class="swY2">　？　</a><br>'+DM+'<br><div id="M'+NQ+'" > </div></div><br>';
 }
 
 
