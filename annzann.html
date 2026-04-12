@@ -2,16 +2,18 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<p> </p>
 <div id="box1" class="rotation-area"></div>
-<center>
 <p id="kaisu" style="color: royalblue; font-size: 130%;">Count.0</p>
 <div id="boxi_Q" class="boxc_2"></div>
 <div id="boxi_Q2" class="boxc_3"></div>
-</center>
 <style>
+body {
+    text-align: center;
+}
+
 .boxc_2 {
     width: 85%;
     padding:0.5em;
@@ -75,7 +77,7 @@
     }
     /*表*/
 .rotation-area {
-    --masu-width:330px;
+    --masu-width: min(90vw, 400px);
     width: var(--masu-width);
     height: var(--masu-width);
     display: flex;
@@ -100,7 +102,7 @@ table {
 }
 
 td {
-    --masu: 60px;
+    --masu: calc(var(--masu-width) / 5);
     width: var(--masu);
     height: var(--masu);
     border: 1px solid #333;
@@ -108,9 +110,13 @@ td {
     box-sizing: border-box;
 }
 
-.fx2 {font-size:150%;}
+.fx2 {
+    font-size: clamp(16px, 4vw, 26px);
+}
+
 
 .choices{
+ grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
  display:grid;
  grid-template-columns:1fr 1fr;
  gap:10px;
@@ -118,6 +124,8 @@ td {
 }
 
 .choice{
+ font-size: clamp(14px, 3.5vw, 18px);
+ padding: 12px;
  border:1px solid #444;
  padding:10px;
  text-align:center;
@@ -131,6 +139,7 @@ td {
 }
 
 .choices2{
+ grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
  display:grid;
  grid-template-columns:1fr 1fr 1fr;
  gap:10px;
@@ -138,6 +147,8 @@ td {
 }
 
 .choice2{
+ font-size: clamp(14px, 3.5vw, 18px);
+ padding: 12px;
  border:1px solid #444;
  padding:10px;
  font-size:100%;
