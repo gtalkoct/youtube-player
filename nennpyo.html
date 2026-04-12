@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+<div id="boxA">
+<div id="box_hyo" class="rotation-area"></div>
+<div id="kaisu" style="text-align: center; color: blue;">Count.0</div>
+<div class="box1">
+<div id="p"></div>
+<div id="p3" class="t_center box3" style="white-space: pre;"></div>
+</div>
+<div id="p2" class="box1 t_center" style="white-space: pre-wrap;"></div>
+</div>
+<!--年表-->
+<div id="boxB" class="box2" style="white-space: pre-wrap;"></div>
+<style>
+.box1{
+    padding:10px;
+    border:2px solid brown;
+    border-radius:5px;
+}
+
+.box2{
+    display:none;
+    padding:10px;
+    border:2px solid brown;
+    border-radius:5px;
+}
+
+.box3{
+    height:11em;
+    /*padding:10px;*/
+    /*border:2px solid brown;*/
+    /*border-radius:5px;*/
+}
+
+.choices{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ margin-top:10px;
+}
+
+.choice{
+ border:1px solid #444;
+ padding:10px;
+ text-align:center;
+ background:#eef3ff;
+ border-radius:6px;
+ cursor:pointer;
+}
+
+.choice:hover{
+ background:#cfdcff;
+}
+
+.btn{
+ margin-top:15px;
+ display:inline-block;
+ padding:6px 10px;
+ border:1px solid #444;
+ background:#eee;
+ cursor:pointer;
+}
+.t_center{
+ text-align:center;
+}
+
+#list{
+ margin-top:10px;
+}
+
+.item{
+ border:1px solid #444;
+ background:#eef3ff;
+ padding:10px;
+ margin:6px 0;
+ border-radius:6px;
+ cursor:move;
+}
+
+    /*表*/
+.rotation-area {
+    --masu-width:280px;
+    width: var(--masu-width);
+    height: var(--masu-width);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px auto;
+    /* 正しいコメント形式 */
+    /*border: 1px solid #ddd;*/
+}
+
+table {
+    /* --start-angle という変数を作り、それを使うように変更 */
+    --start-angle: 0deg;
+    --masu-scale: 0.7;
+    /* --start-angle: random(0deg, 350deg); */
+    border-collapse: collapse;
+    animation: rotate-right 90s linear infinite;
+}
+
+@keyframes rotate-right {
+    from { transform: rotate(var(--start-angle))  scale(var(--masu-scale)); }
+    to { transform: rotate(calc(var(--start-angle) + 360deg))  scale(var(--masu-scale));}
+}
+
+td {
+    --masu: 55px;
+    width: var(--masu);
+    height: var(--masu);
+    border: 1px solid #333;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.btn2{
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 3px;
+  border: 1px solid #333;
+  background:#eee;
+  cursor: pointer;
+}
+
+.active {
+  background: orange;
+}
+
+
+</style>
+
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+
+let P=document.getElementById("p");
+let P2=document.getElementById("p2");
+let P3=document.getElementById("p3");
+
+let data=`
+57\t倭の奴国王が後漢に使いを送る
+239\t卑弥呼が魏に使いを送る
+391\tヤマト王権が高句麗・新羅と戦う（広開土王碑）
+478\t倭王武（雄略天皇）が南朝宋に使いを送る
+593\t聖徳太子が摂政となる
+603\t冠位十二階
+604\t十七条の憲法
+607\t小野妹子を隋に送る
+630\t第1回遣唐使を送る
+645\t大化の改新が始まる
+663\t白村江の戦い
+672\t壬申の乱
+701\t大宝律令
+708\t和同開珎が鋳造される
+710\t都を奈良（平城京）に遷都
+723\t三世一身法
+741\t聖武天皇が国分寺建立のを発布
+743\t墾田永年私財法
+784\t都を京都（長岡京）に遷都
+794\t都を京都（平安京）に遷都
+802\t坂上田村麻呂が胆沢城を築く
+866\t藤原良房が摂政となる
+894\t菅原道真が遣唐使の廃止を提唱
+939\t平将門の乱（〜40）
+939\t藤原純友の乱（～41）
+1016\t藤原道長が摂政となる
+1051\t前九年合戦（～62）
+1069\t後三条天皇が荘園の整理を行う
+1083\t後三年合戦（～87）
+1086\t白河上皇が院政を開始
+1156\t保元の乱
+1159\t平治の乱
+1167\t平清盛が太政大臣となる
+1185\t壇ノ浦の戦いで平氏が滅ぶ
+1185\t源頼朝が守護・地頭の設置を認められる
+1192\t源頼朝が征夷大将軍になる
+1221\t承久の乱
+1232\t御成敗式目
+1274\t文永の役
+1281\t弘安の役
+1297\t永仁の徳政令
+1333\t鎌倉幕府滅亡
+1334\t建武の新政
+1336\t朝廷が南北に分かれ、対立する
+1338\t足利尊氏が征夷大将軍となる
+1378\t足利義満、室町に幕府を移す
+1392\t南北朝が合ーされる
+1404\t足利義満が日明貿易（勘合貿易）を開始
+1428\t正長の土一揆
+1429\t尚氏が沖縄を統一する（琉球王国）
+1457\tコシャマインの戦い
+1467\t応仁の乱（〜77）
+1485\t山城の国一揆（～93）
+1488\t加賀の一向一揆（約100年間）
+1543\tポルトガル人が種子島に鉄砲を伝える
+1549\tザビエルがキリスト教を伝える
+1573\t信長が義昭を追放、室町幕府滅亡
+1582\t本能寺の変
+1582\t天正遣欧使節団出発(～90)
+1582\t太閤検地を始める
+1586\t秀吉が関白に就任する
+1587\tバテレン追放令
+1588\t刀狩令
+1590\t秀吉、全国統一
+1592\t文禄の役
+1597\t慶長の役
+1600\t関ヶ原の戦い
+1603\t徳川家康が征夷大将軍になる
+1609\t薩摩藩が琉球王国を支配下に置く
+1612\t幕領でキリスト教を禁止する
+1615\t大阪夏の陣で豊臣氏が滅亡
+1615\t武家諸法度・禁中並公家中諸法度
+1635\t日本人の海外渡航を禁止する
+1635\t参勤交代制度を定める
+1637\t島原・天草一揆（～38）
+1639\tポルトガル船の来航を禁止
+1641\tオランダ商館を出島に移す・鎖国体制が固まる
+1657\t明暦の大火
+1669\tシャクシャインの戦い
+1685\t徳川綱吉の生類憐れみの令
+1702\t赤穂浪士の討ち入り事件が起きる
+1709\t新井白石の正徳の治（～16）
+1716\t徳川吉宗の享保の改革（～45）
+1772\t田沼意次が老中となる
+1787\t松平定信の寛政の改革（～93）
+1792\tロシアのラックスマンが根室に来て通商を要求
+1804\tロシアのレザノフが通商を要求
+1808\tイギリス軍艦フェートンが長崎港侵入
+1825\t異国船打払令
+1837\t大塩平八郎の乱
+1841\t水野忠邦の天保の改革（～43）
+1853\tペリーが浦賀に来航
+1854\t日米和親条約
+1855\t日露和親条約で、日露の国境を択捉島と得撫島の間に定める
+1858\t日米修好通商条約
+1858\t安政の大獄（～59）
+1860\t桜田門外の変
+1862\t生麦事件
+1863\t薩英戦争
+1864\t下関戦争
+1866\t薩長同盟
+1867\t大政奉還、王政復古の大号令
+1868\t戊辰戦争(～69）
+1868\t五ヶ条の御誓文
+1869\t版籍奉還
+1871\t廃藩置県
+1871\t岩倉使節団（～73）
+1872\t学制公布
+1873\t徴兵令
+1873\t地租改正
+1874\t民撰議院設立建白書
+1874\t台湾出兵
+1875\t樺太・千島交換条約
+1876\t日朝修好条規
+1877\t西南戦争
+1879\t琉球を沖縄県とする
+1880\t国会期成同盟の結成
+1881\t国会開設の勅諭
+1885\t内閣制度ができる
+1889\t大日本帝国憲法発布
+1890\t教育勅語発布
+1890\t第1回帝国議会
+1894\t領事裁判権の撤廃に成功
+1894\t日清戦争（〜95）
+1895\t下関条約
+1895\t三国干渉
+1900\t義和団事件
+1901\t北京議定書締結
+1902\t日英同盟（～23）
+1904\t日露戦争（～05）
+1905\tポーツマス条約
+1910\t大逆事件
+1910\t韓国を併合する
+1911\t関税自主権を回復
+1912\t護憲運動始まる
+1914\t第一次世界大戦に参戦
+1915\t中華民国政府に、「ニ十一条の要求」を出す
+1918\t米騒動
+1918\tシベリア出兵（～22）
+1918\t原敬の政党内閣成立
+1920\t国際連盟に加盟、日本は常任理事国となる
+1923\t関東大震災
+1925\t普通選挙法が成立
+1931\t満州事変
+1932\t満州国建国
+1932\t五・一五事件
+1933\t日本が国際連盟を脱退する
+1936\t二・二六事件
+1937\t日中戦争（～45）
+1938\t国家総動員法が成立
+1940\t日独伊三国軍事同盟を締結
+1941\t日ソ中立条約を締結
+1941\t大東亜戦争（太平洋戦争）（～45）
+1943\t大東亜会議
+1945\t広島、長崎に原爆投下
+1945\tポツダム宣言を受諾、降伏
+1946\t公職追放東京裁判（～48）
+1946\t日本国憲法公布
+1950\tGHQの指令で警察予備隊が新設される
+1951\tサンフランシスコ講和条約
+1951\t日米安全保障条約締結
+1952\tサンフランシスコ講和条約発効日本の独立回復
+1956\t日ソ共同宣言で国交を回復、国際連合に加盟
+1960\t日米安保条約改定
+1964\t東海道新幹線開通
+1964\t東京オリンピック開催
+1965\t日韓基本条約
+1972\tアメリカの施政下にあった沖縄が本土復帰
+1972\t日中共同声明に調印、国交正常化
+1973\t石油危機（79第二次石油危機）
+1978\t日中平和友好条約
+1989\t昭和天皇崩御
+1992\t国連平和維持活動（PKO）協力法成立
+2002\t北朝鮮拉致被害者のうち5名が帰国
+`;
+
+
+let history=data.trim().split("\n").map(v=>{
+ let [year,event]=v.split("\t");
+ return {year:+year,event};
+});//+yearは文字列を数値に変えている
+
+function shuffle(a){
+ for(let i=a.length-1;i>0;i--){
+  let j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+
+let order=[];
+let index=0;
+let correct=0;
+let mode=0;
+let answer=[];
+let answer2=[];
+let Ten="";
+let haba=10;
+let history2=[];
+let kongo=0;
+let sortable;
+
+P2.innerHTML=`
+<div id="eraMode1"><button class="btn active" onclick="changeMode(0,this)">事→年</button>  <button class="btn" onclick="changeMode(1,this)">年→事</button>  <button class="btn" onclick="changeMode(2,this)">並べ替</button>  <button class="btn" onclick="changeMode(3,this)">混　合</button></div><button class="btn" onclick="changeDiv()">年表を見る</button>
+<div id="eraMode2">選択肢の範囲： <button class="btn" onclick="changeHaba(20,this)">広い</button>  <button class="btn" onclick="changeHaba(15,this)">中間</button>  <button class="btn active" onclick="changeHaba(8,this)">狭い</button></div>
+<div id="eraButtons"></div>  <button id="all" class="btn2">全部</button>
+`;
+//裏の年表表示
+document.getElementById('boxB').textContent=[...history].map(v=> String(v.year).padStart(4,' ') +'  '+ v.event).join("\n"); 
+document.getElementById('boxB').insertAdjacentHTML("afterbegin",'<button class="btn" onclick="changeDiv()">問題に戻る</button><br><br>');
+
+// ===== 時代 =====
+const periods = [
+  { name: "飛", start: 0, end: 710 },
+  { name: "奈", start: 710, end: 794 },
+  { name: "平", start: 794, end: 1185 },
+  { name: "鎌", start: 1185, end: 1333 },
+  { name: "室", start: 1333, end: 1573 },
+  { name: "安", start: 1573, end: 1603 },
+  { name: "江", start: 1603, end: 1868 },
+  { name: "明", start: 1868, end: 1912 },
+  { name: "大", start: 1912, end: 1926 },
+  { name: "昭", start: 1926, end: 2100 }
+];
+
+// ===== ボタン生成 =====
+let container = document.getElementById("eraButtons");
+
+periods.forEach((p, i) => {
+  let el = document.createElement("button");
+  el.className = "btn2";
+  el.textContent = p.name;
+  el.dataset.index = i;
+
+  el.onclick = () => {
+    el.classList.toggle("active");
+    update();
+  };
+
+  container.appendChild(el);
+});
+
+// ===== 更新 =====
+function update() {
+  let selected = [...document.querySelectorAll("#eraButtons .active")]
+    .map(el => periods[el.dataset.index]);
+
+  history2 = history.filter(v =>
+    selected.length === 0 ||
+    selected.some(p => v.year >= p.start && v.year < p.end)
+  );
+  restart ()
+}
+
+// ===== 全部 =====
+//document.getElementById("all").onclick = () => {
+//  document.querySelectorAll("#eraButtons span")
+//    .forEach(el => el.classList.add("active"));
+//  update();
+//};
+document.getElementById("all").onclick = () => {
+  let buttons = document.querySelectorAll("#eraButtons button");
+  let allActive = [...buttons].every(el => el.classList.contains("active"));
+
+  buttons.forEach(el =>
+    el.classList.toggle("active", !allActive)
+  );
+
+  update();
+};
+
+
+// ===== 明治以降 =====
+//document.getElementById("modern").onclick = () => {
+//  document.querySelectorAll("#eraButtons span")
+//    .forEach((el, i) => {
+//      if (periods[i].start >= 1868) {
+//        el.classList.add("active");
+//      } else {
+//        el.classList.remove("active");
+//      }
+//    });
+//  update();
+//};
+
+//=====スタート=======
+
+update();
+restart();
+
+function restart(){
+
+ order=shuffle([...history2]);
+ index=0;
+ correct=0;
+
+ next();
+
+}
+
+function next(){
+ Ten="";
+ P3.innerHTML="";
+ if(index>=order.length){
+
+  let rate=Math.round(correct/order.length*100);
+
+  P.innerHTML=
+  "終了<br><br>"+
+  "正解 "+correct+" / "+order.length+
+  "<br>正解率 "+rate+"%"+
+  '<br><div class="btn" onclick="restart()">もう一度</div>';
+
+  return;
+
+ }
+ 
+ let ans=order[index];
+ 
+ let ii = history.findIndex(v => v.year === ans.year);
+ //選択肢の範囲を近づける
+ let j = haba;//正解の前後１０ずつを選択肢とする
+ let start = ii - j;
+ let end = ii + j + 1;
+ // 左にはみ出たら右へずらす
+ if (start < 0) {
+   end += -start;
+   start = 0;
+ }
+ // 右にはみ出たら左へずらす
+ if (end > history.length) {
+   start -= (end - history.length);
+   end = history.length;
+ }
+ //選択肢の年の重複を避ける
+ let pool = shuffle(
+   history.slice(start, end).filter(v => v.year !== ans.year)
+ );
+ 
+ let unique = [];
+ let usedYears = new Set();
+ 
+ for (let v of pool) {
+   if (!usedYears.has(v.year)) {
+     unique.push(v);
+     usedYears.add(v.year);
+   }
+ }
+ 
+ let wrong = unique.slice(0,3);
+
+// let wrong=shuffle(
+//  history2.slice(start, end).filter(v=>v.year!=ans.year)
+// ).slice(0,3);
+
+ let q=shuffle([ans,...wrong]);
+ 
+ if (kongo==1){mode=getRandom(0,2);}
+
+ if(mode==2){
+
+  //let current=shuffle([...history2]).slice(0,4);
+  let current=[...q];
+
+  answer=[...current].sort((a,b)=>a.year-b.year);
+  answer2=[...answer].map(v=> String(v.year).padStart(4,' ') +'  '+ v.event).join("<br>");
+  
+  current=shuffle(current);
+
+  P.innerHTML=
+  '<div class="t_center">問題 '+(index+1)+' (/'+order.length+") 年代順に並べてください   (古い → 新しい)<br>"+
+  '<div id="list">'+
+  current.map(v=>
+   `<div class="item" data-year="${v.year}">
+    ${v.event}
+   </div>`
+  ).join("")+
+  '</div></div>';
+  P3.innerHTML='<div class="t_center"><div class="btn" onclick="judge()">判断</div>';
+
+  //let list=document.getElementById("list");
+  //
+  //new Sortable(list,{
+  // animation:150
+  //});
+  
+  sortQ();
+  
+  return;
+
+ }
+
+
+ let question=mode ? ans.year+"年" : ans.event;
+ let i=0;
+ let choices=q.map(v=>{
+
+  let text=mode ? v.event : v.year;
+  let value=mode ? v.event : v.year;
+  let answer=mode ? ans.event : ans.year;
+
+  return `<div class="choice" id="S${i++}" onclick="check('${value}','${answer}',this)">${text}</div>`;
+
+ }).join("");
+ 
+ answer2=q.sort((a,b)=>a.year-b.year).map(v=> String(v.year).padStart(4,' ') +'  '+ v.event).join("<br>");
+
+ P.innerHTML=
+ '<div class="t_center">問題 '+(index+1)+' (/'+order.length+')<br>'+
+ question+
+ `<div class="choices">${choices}</div></div>`;
+
+}
+
+function sortQ(){
+
+ let list=document.getElementById("list");
+
+ sortable = new Sortable(list,{
+  animation:150
+ });
+
+}
+
+function check(a,b,elm){
+
+ if(a==b){
+  correct++;
+  elm.style.backgroundColor='lightgreen';
+  Ten=Ten+"⭕️";
+  for (var i=0;i<4;i++){
+      document.getElementById('S'+i).removeAttribute('onclick');
+      document.getElementById('S'+i).style.cursor='text';
+  }
+  P3.innerHTML=Ten+' 正解　　 <div class="btn" onclick="next()">次の問題</div><br><div style="text-align:left;">'+answer2+'</div>';
+  Nkai++;
+  putColor(1);
+  index++;
+ 
+ }else{
+  elm.style.backgroundColor='lightpink';
+  Ten=Ten+"❌";
+  P3.innerHTML=Ten+' ちがうよ';
+    elm.removeAttribute('onclick');
+    elm.style.cursor='text';
+
+ }
+
+}
+
+function judge(){
+
+ let items=document.querySelectorAll("#list .item");
+
+ let ok=true;
+
+ items.forEach((v,i)=>{
+  if(+v.dataset.year!=answer[i].year) ok=false;
+ });
+
+ if(ok){
+  correct++;
+  sortable.option("disabled", true); // ←これで止まる
+  document.querySelectorAll(".item").forEach(v=>{
+   v.style.background="#99FF99";
+   v.style.cursor="default";
+  });
+  Ten=Ten+"⭕️";
+  P3.innerHTML=Ten+' 正解　　 <div class="btn" onclick="next()">次の問題</div><br><div style="text-align:left;">'+answer2+'</div>';
+  Nkai++;
+  putColor(1);
+  index++;
+ 
+ }else{
+  Ten=Ten+"❌";
+  P3.innerHTML=Ten+' ちがうよ  <div class="btn" onclick="judge()">判断</div><br><div style="text-align:left;">'+answer2+'</div>';
+ }
+}
+
+function changeMode(data,data2){
+ kongo= (data==3) ? 1 : 0;
+ mode=data;
+ let buttons = document.querySelectorAll("#eraMode1 button");
+ buttons.forEach(el =>
+ el.classList.remove("active")
+ );
+ data2.classList.add("active");
+
+ restart();
+}
+
+function changeDiv(){
+    let a=document.getElementById('boxA').style.display;
+    document.getElementById('boxA').style.display= (a==='block' || a==='') ? 'none' : 'block';
+    document.getElementById('boxB').style.display= (a==='block' || a==='') ? 'block' : 'none';
+}
+
+function changeHaba(data,data2){
+    //document.getElementById('haba').innerHTML=data2.textContent;
+    haba=data;
+    let buttons = document.querySelectorAll("#eraMode2 button");
+    buttons.forEach(el =>
+    el.classList.remove("active")
+    );
+    data2.classList.add("active");
+
+    restart();
+}
+//グルグル表===========================================
+var trmax = 5, tdmax = 5, Nkai=0;
+var mytable; // グローバルで保持
+var boxColor=["red","deepskyblue","yellow","darkviolet","black","lime","orange"];
+boxColor[7]=boxColor[getRandom(0,6)];
+var kaihyoji=document.getElementById('kaisu');
+
+function maketable() {
+    var box_hyo = document.getElementById('box_hyo');
+    var data_table = '<table id="myTable"><tbody>';
+    for (var i = 0; i < trmax; i++) {
+        data_table += '<tr>';
+        for (var j = 0; j < tdmax; j++) {
+            // セルの中身を空文字以外にするとクリックしやすくなります
+            //data_table += '<td>' + (i * tdmax + j + 1) + '</td>';
+            data_table += '<td>　</td>';
+        }
+        data_table += '</tr>';
+    }
+    data_table += '</tbody></table>';
+    box_hyo.innerHTML = data_table;
+}
+
+function init() {
+    maketable();
+    mytable = document.getElementById("myTable");
+    var n=0;
+
+    for (var i = 0; i < mytable.rows.length; i++) {
+        for (var j = 0; j < mytable.rows[i].cells.length; j++) {
+            //mytable.rows[i].cells[j].id = i + "-" + j;
+            mytable.rows[i].cells[j].id ='CL'+ n++;
+            //mytable.rows[i].cells[j].innerHTML = mytable.rows[i].cells[j].id;
+            //mytable.rows[i].cells[j].onclick = clicked;
+        }
+    }
+    setOrigin();
+}
+
+//function clicked(e) {
+//    var txt = document.getElementById("result");
+//    if (this.style.backgroundColor == '') {
+//        this.style.backgroundColor = 'red';
+//    } else {
+//        this.style.backgroundColor = '';
+//    }
+//    //txt.textContent = this.id + "がクリックされました。値は：" + this.innerHTML;
+//}
+
+function putColor(data){
+    for (var i=0;i<data;i++){
+        var dmy0=getRandom(0,24),dmy=document.getElementById('CL'+dmy0), dmy1=dmy.style.backgroundColor, dmy2=boxColor[getRandom(0,7)],dmy3;
+        if (dmy1==dmy2){dmy2=""; dmy3=dmy1;} else {dmy3='';}
+        if (Nkai != 0){
+            dmy.style.backgroundColor = dmy2; // 1回目点灯
+            setTimeout(() => dmy.style.backgroundColor = dmy3, 400); // 1回目消灯
+            setTimeout(() => dmy.style.backgroundColor = dmy2, 800); // 2回目点灯
+            setTimeout(() => dmy.style.backgroundColor = dmy3, 1200); // 2回目消灯
+            setTimeout(() => dmy.style.backgroundColor = dmy2, 1600); // 元の色に戻す
+            if (dmy2==""){dmy2='';}
+            var today=new Date();
+            var today2=today.getFullYear() +'.'+ (today.getMonth()+1) +'.'+ today.getDate() +' '+ '日月火水木金土'.slice(today.getDay(),(today.getDay()+1)) +' '+ today.getHours() +':'+ today.getMinutes() +':'+ today.getSeconds();
+            kaihyoji.innerHTML='Count.'+Nkai+' - '+(dmy0+1)+' - '+((dmy2=="") ? 'white' : dmy2) +' ( '+today2+' )'; 
+        }
+        dmy.style.backgroundColor = dmy2;
+        if (Nkai % 10 == 0){boxColor[7]=boxColor[getRandom(0,6)];}//Countが１０ごとに色の重心を変える
+    }
+}
+
+function setOrigin() {
+    // 5x5の真ん中(13番目)はインデックス12
+    var cells = mytable.getElementsByTagName('td');
+    var centerCell = cells[12]; 
+    
+    // 表全体の左上からの中心位置を計算
+    const centerX = centerCell.offsetLeft + (centerCell.offsetWidth / 2);
+    const centerY = centerCell.offsetTop + (centerCell.offsetHeight / 2);
+    
+    // 修正：mytableを使用
+    mytable.style.transformOrigin = centerX + "px " + centerY + "px";
+    //for (var i=0;i<getRandom(1,15);i++){putColor();}
+    putColor(getRandom(1,15));
+    
+    // 実行：90度からスタートするように変更
+    updateStartAngle();
+}
+
+function updateStartAngle() {
+    var k=getRandom(0, 5) * 15 ;
+    // CSS変数（--start-angle）だけを書き換える
+    //mytable.style.setProperty('--start-angle', degrees + 'deg');
+    mytable.style.setProperty('--start-angle', k + 'deg');
+}
+
+//乱数の発生
+function getRandom( min, max ) {
+    var random = Math.floor( Math.random() * (max + 1 - min) ) + min;
+    return random;
+}
+
+// 初期化実行
+window.onload = init;
+
+
+</script>
+</body>
+</html>
