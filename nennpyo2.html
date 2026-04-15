@@ -783,5 +783,14 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
 </script>
+ <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    for (let reg of regs) {
+      reg.unregister();
+    }
+  });
+}
+</script>
 </body>
 </html>
